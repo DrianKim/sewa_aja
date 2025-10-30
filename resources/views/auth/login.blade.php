@@ -336,7 +336,6 @@
             }
         }
 
-        /* Error Messages */
         .error-message {
             color: #e74c3c;
             font-size: 12px;
@@ -417,7 +416,6 @@
             <p>Rental Kendaraan Terpercaya</p>
         </div>
 
-        <!-- Flash Messages -->
         @if (session('success'))
             <div class="alert alert-success">
                 <i class="fas fa-check-circle"></i> {{ session('success') }}
@@ -501,7 +499,6 @@
     </div>
 
     <script>
-        // Toggle password visibility
         const togglePassword = document.getElementById('togglePassword');
         const passwordInput = document.getElementById('password');
 
@@ -514,7 +511,6 @@
             });
         }
 
-        // Input animation
         const inputs = document.querySelectorAll('.form-control');
         inputs.forEach(input => {
             input.addEventListener('focus', function() {
@@ -526,7 +522,6 @@
             });
         });
 
-        // Add error border style
         const style = document.createElement('style');
         style.textContent = `
             .error-border {

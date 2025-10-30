@@ -409,7 +409,6 @@
 
     <!-- Mobile Menu Script -->
     <script>
-        // Mobile Menu Toggle
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
         const sidebar = document.querySelector('.sidebar');
 
@@ -419,7 +418,6 @@
             });
         }
 
-        // Close sidebar when clicking outside on mobile
         document.addEventListener('click', (e) => {
             if (window.innerWidth <= 768) {
                 if (!sidebar.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
@@ -428,16 +426,13 @@
             }
         });
 
-        // Profile Dropdown (optional - add your own logic)
         const profileDropdown = document.querySelector('.profile-dropdown');
         if (profileDropdown) {
             profileDropdown.addEventListener('click', () => {
-                // Add dropdown menu logic here
                 console.log('Profile clicked');
             });
         }
 
-        // SweetAlert Logout Confirmation
         const logoutBtn = document.getElementById('logout-btn');
         const logoutForm = document.getElementById('logout-form');
 
@@ -460,7 +455,6 @@
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Show success message
                         Swal.fire({
                             title: 'Berhasil!',
                             text: 'Anda akan segera logout...',
@@ -468,7 +462,6 @@
                             timer: 1500,
                             showConfirmButton: false
                         }).then(() => {
-                            // Submit the logout form
                             logoutForm.submit();
                         });
                     }
@@ -476,7 +469,6 @@
             });
         }
 
-        // SweetAlert for Success Messages (jika ada flash message)
         @if (session('success'))
             Swal.fire({
                 title: 'Berhasil!',
@@ -487,7 +479,6 @@
                     popup: 'swal2-popup',
                     confirmButton: 'swal2-confirm'
                 },
-                buttonsStyling: false
             });
         @endif
 
@@ -501,46 +492,37 @@
                     popup: 'swal2-popup',
                     confirmButton: 'swal2-confirm'
                 },
-                buttonsStyling: false
             });
         @endif
     </script>
 
     <script>
-        // Real-time Date and Time Display
         function updateDateTime() {
             const now = new Date();
 
-            // Array untuk hari dan bulan dalam Bahasa Indonesia
             const hari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
             const bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
                 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
             ];
 
-            // Get date components
             const namaHari = hari[now.getDay()];
             const tanggal = now.getDate();
             const namaBulan = bulan[now.getMonth()];
             const tahun = now.getFullYear();
 
-            // Get time components
             const jam = String(now.getHours()).padStart(2, '0');
             const menit = String(now.getMinutes()).padStart(2, '0');
             const detik = String(now.getSeconds()).padStart(2, '0');
 
-            // Format date and time
             const formattedDate = `${namaHari}, ${tanggal} ${namaBulan} ${tahun}`;
             const formattedTime = `${jam}:${menit}:${detik} WIB`;
 
-            // Update the DOM
             document.getElementById('current-date').textContent = formattedDate;
             document.getElementById('current-time').textContent = formattedTime;
         }
 
-        // Update every second
         setInterval(updateDateTime, 1000);
 
-        // Initial call
         updateDateTime();
     </script>
 
