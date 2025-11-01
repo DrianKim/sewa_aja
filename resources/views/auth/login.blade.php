@@ -92,7 +92,7 @@
 
         .logo-section {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 0.8rem;
         }
 
         .logo-icon {

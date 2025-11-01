@@ -253,29 +253,29 @@
 <body class="bg-gradient-to-br from-gray-50 to-gray-100">
 
     {{-- Sidebar Admin --}}
-    <aside class="sidebar w-64 sidebar-gradient shadow-2xl fixed left-0 top-0">
-        <div class="relative z-10 h-full flex flex-col">
+    <aside class="fixed top-0 left-0 w-64 shadow-2xl sidebar sidebar-gradient">
+        <div class="relative z-10 flex flex-col h-full">
             <!-- Logo Section -->
-            <div class="flex items-center space-x-3 p-6 pb-4 border-b border-white/20">
+            <div class="flex items-center p-6 pb-4 space-x-3 border-b border-white/20">
                 <div
-                    class="w-12 h-12 bg-white/20 backdrop-blur-lg rounded-xl flex items-center justify-center logo-icon shadow-lg">
-                    <i class="fas fa-car-side text-white text-xl"></i>
+                    class="flex items-center justify-center w-12 h-12 shadow-lg bg-white/20 backdrop-blur-lg rounded-xl logo-icon">
+                    <i class="text-xl text-white fas fa-car-side"></i>
                 </div>
                 <div>
-                    <span class="text-2xl font-bold text-white block">Sewa Aja</span>
+                    <span class="block text-2xl font-bold text-white">Sewa Aja</span>
                     <span class="text-xs text-white/70">Rental Management</span>
                 </div>
             </div>
 
             <!-- Menu Items -->
-            <div class="sidebar-content px-4 pt-6">
+            <div class="px-4 pt-6 sidebar-content">
                 <ul class="space-y-2 text-white">
                     <!-- Dashboard -->
                     <li>
                         <a href="{{ route('admin.dashboard') }}"
                             class="menu-item flex items-center px-4 py-3 rounded-xl
                            {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                            <i class="fas fa-tachometer-alt w-5 mr-4 text-lg"></i>
+                            <i class="w-5 mr-4 text-lg fas fa-tachometer-alt"></i>
                             <span class="font-medium">Dashboard</span>
                         </a>
                     </li>
@@ -285,7 +285,7 @@
                         <a href="{{ route('kendaraan.index') }}"
                             class="menu-item flex items-center px-4 py-3 rounded-xl
                            {{ request()->routeIs('kendaraan.*') ? 'active' : '' }}">
-                            <i class="fas fa-car w-5 mr-4 text-lg"></i>
+                            <i class="w-5 mr-4 text-lg fas fa-car"></i>
                             <span class="font-medium">Data Kendaraan</span>
                         </a>
                     </li>
@@ -295,7 +295,7 @@
                         <a href="{{ route('kategori.index') }}"
                             class="menu-item flex items-center px-4 py-3 rounded-xl
                            {{ request()->routeIs('kategori.*') ? 'active' : '' }}">
-                            <i class="fas fa-tags w-5 mr-4 text-lg"></i>
+                            <i class="w-5 mr-4 text-lg fas fa-tags"></i>
                             <span class="font-medium">Kategori</span>
                         </a>
                     </li>
@@ -305,7 +305,7 @@
                         <a href="{{ route('detail.index') }}"
                             class="menu-item flex items-center px-4 py-3 rounded-xl
                            {{ request()->routeIs('detail.*') ? 'active' : '' }}">
-                            <i class="fas fa-list-alt w-5 mr-4 text-lg"></i>
+                            <i class="w-5 mr-4 text-lg fas fa-list-alt"></i>
                             <span class="font-medium">Detail Kendaraan</span>
                         </a>
                     </li>
@@ -313,26 +313,26 @@
             </div>
 
             <!-- Sidebar Footer -->
-            <div class="sidebar-footer border-t border-white/20">
+            <div class="border-t sidebar-footer border-white/20">
                 <!-- Admin Info -->
-                <div class="p-4 bg-white/10 backdrop-blur-lg rounded-xl mb-3 mx-4">
+                {{-- <div class="p-4 mx-4 mb-3 bg-white/10 backdrop-blur-lg rounded-xl">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                            <i class="fas fa-user text-white"></i>
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-white/20">
+                            <i class="text-white fas fa-user"></i>
                         </div>
                         <div class="flex-1">
-                            <p class="text-white font-semibold text-sm">{{ Auth::user()->name ?? 'Admin' }}</p>
-                            <p class="text-white/70 text-xs">Administrator</p>
+                            <p class="text-sm font-semibold text-white">{{ Auth::user()->name ?? 'Admin' }}</p>
+                            <p class="text-xs text-white/70">Administrator</p>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <!-- Logout -->
                 <form method="POST" action="{{ route('logout') }}" id="logout-form" class="px-4">
                     @csrf
                     <button type="button" id="logout-btn"
-                        class="logout-btn w-full text-left flex items-center px-4 py-3 rounded-xl text-white hover:text-red-200">
-                        <i class="fas fa-sign-out-alt w-5 mr-4 text-lg"></i>
+                        class="flex items-center w-full px-4 py-3 text-left text-white logout-btn rounded-xl hover:text-red-200">
+                        <i class="w-5 mr-4 text-lg fas fa-sign-out-alt"></i>
                         <span class="font-medium">Logout</span>
                     </button>
                 </form>
@@ -342,49 +342,49 @@
 
     {{-- Mobile Menu Toggle --}}
     <button
-        class="mobile-menu-btn fixed top-4 left-4 z-50 w-10 h-10 bg-white rounded-lg shadow-lg flex items-center justify-center">
-        <i class="fas fa-bars text-gray-700"></i>
+        class="fixed z-50 flex items-center justify-center w-10 h-10 bg-white rounded-lg shadow-lg mobile-menu-btn top-4 left-4">
+        <i class="text-gray-700 fas fa-bars"></i>
     </button>
 
     {{-- Main Content --}}
     <div class="main-content">
         <!-- Header -->
-        <header class="header-glass flex justify-between items-center mb-8 p-6 shadow-lg">
+        <header class="flex items-center justify-between p-6 mb-8 shadow-lg header-glass">
             <div>
                 <h1 class="text-3xl font-bold gradient-text">@yield('title', 'Dashboard')</h1>
                 <div class="flex items-center gap-3 mt-2">
-                    <p class="text-gray-600 text-sm font-medium" id="current-date"></p>
+                    <p class="text-sm font-medium text-gray-600" id="current-date"></p>
                     <span class="text-gray-400">•</span>
-                    <p class="text-gray-600 text-sm font-medium" id="current-time"></p>
+                    <p class="text-sm font-medium text-gray-600" id="current-time"></p>
                 </div>
             </div>
 
             <div class="flex items-center space-x-4">
                 <!-- Notification -->
-                <div class="relative cursor-pointer hover:scale-110 transition-transform">
+                <div class="relative transition-transform cursor-pointer hover:scale-110">
                     <div
-                        class="w-11 h-11 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                        <i class="fas fa-bell text-white"></i>
+                        class="flex items-center justify-center shadow-lg w-11 h-11 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl">
+                        <i class="text-white fas fa-bell"></i>
                     </div>
                     <span
-                        class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                        class="absolute flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full -top-1 -right-1">
                         3
                     </span>
-                    <span class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full notification-badge"></span>
+                    <span class="absolute w-5 h-5 bg-red-500 rounded-full -top-1 -right-1 notification-badge"></span>
                 </div>
 
                 <!-- Profile -->
                 <div
-                    class="profile-dropdown flex items-center space-x-3 bg-gradient-to-r from-blue-50 to-purple-50 px-4 py-2 rounded-xl hover:shadow-md">
+                    class="flex items-center px-4 py-2 space-x-3 profile-dropdown bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl hover:shadow-md">
                     <div
-                        class="profile-badge w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-md">
-                        <i class="fas fa-user text-white"></i>
+                        class="flex items-center justify-center w-10 h-10 shadow-md profile-badge bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl">
+                        <i class="text-white fas fa-user"></i>
                     </div>
                     <div>
-                        <p class="text-gray-800 font-semibold text-sm">{{ Auth::user()->name ?? 'Admin' }}</p>
-                        <p class="text-gray-500 text-xs">Administrator</p>
+                        <p class="text-sm font-semibold text-gray-800">{{ Auth::user()->name ?? 'Admin' }}</p>
+                        <p class="text-xs text-gray-500">Administrator</p>
                     </div>
-                    <i class="fas fa-chevron-down text-gray-400 text-xs"></i>
+                    <i class="text-xs text-gray-400 fas fa-chevron-down"></i>
                 </div>
             </div>
         </header>
@@ -395,17 +395,16 @@
         </div>
 
         <!-- Footer -->
-        <footer class="mt-12 text-center text-gray-500 text-sm py-6 border-t border-gray-200">
+        <footer class="py-6 mt-12 text-sm text-center text-gray-500 border-t border-gray-200">
             <div
-                class="fixed bottom-0 w-full flex items-center gap-2 bg-white/90 border-t border-gray-200 px-4 py-3 z-50 shadow">
-                <span class="font-bold text-gray-500 text-base">Made With</span>
+                class="fixed bottom-0 z-50 flex items-center w-full gap-2 px-4 py-3 border-t border-gray-200 shadow bg-white/90">
+                <span class="text-base font-bold text-gray-500">Made With</span>
                 <span class="mx-1 text-xl text-gray-400"><i class="fas fa-heart"></i></span>
-                <span class="font-bold text-gray-700 text-base">By</span>
-                <a href="#"><span class="font-bold text-blue-500 text-xl">𝓟</span></a>
+                <span class="text-base font-bold text-gray-700">By</span>
+                <a href="#"><span class="text-xl font-bold text-blue-500">𝓟</span></a>
             </div>
         </footer>
     </div>
-
 
     <!-- Mobile Menu Script -->
     <script>
@@ -496,6 +495,7 @@
         @endif
     </script>
 
+    <!-- Date and Time Script -->
     <script>
         function updateDateTime() {
             const now = new Date();
