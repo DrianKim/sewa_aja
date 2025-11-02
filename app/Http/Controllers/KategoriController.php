@@ -13,12 +13,12 @@ class KategoriController extends Controller
             'data_kategori' => Kategori::all(),
         ];
 
-        return view('kategori.index', $data);
+        return view('admin.kategori.index', $data);
     }
 
     public function create()
     {
-        return view('kategori.create');
+        return view('admin.kategori.create');
     }
 
     public function store(Request $request)
@@ -40,7 +40,7 @@ class KategoriController extends Controller
     public function edit($id)
     {
         $kategori = Kategori::findOrFail($id);
-        return view('kategori.edit', compact('kategori'));
+        return view('admin.kategori.edit', compact('kategori'));
     }
 
     public function update(Request $request, $id)

@@ -8,6 +8,6 @@ class DetailController extends Controller
 {
     public function index()
     {
-        return view('detail.index');
+        return view('admin.detail.index');
     }
 }

@@ -8,6 +8,6 @@ class KendaraanController extends Controller
 {
     public function index()
     {
-        return view('kendaraan.index');
+        return view('admin.kendaraan.index');
     }
 }

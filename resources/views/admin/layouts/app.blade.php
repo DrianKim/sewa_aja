@@ -6,11 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Dashboard Admin - Sewa Aja')</title>
 
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ asset('images/favicon.ico') }}">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Material Icons -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
     <!-- SweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -257,9 +264,16 @@
         <div class="relative z-10 flex flex-col h-full">
             <!-- Logo Section -->
             <div class="flex items-center p-6 pb-4 space-x-3 border-b border-white/20">
-                <div
+                {{-- <div
                     class="flex items-center justify-center w-12 h-12 shadow-lg bg-white/20 backdrop-blur-lg rounded-xl logo-icon">
                     <i class="text-xl text-white fas fa-car-side"></i>
+                </div> --}}
+                <div
+                    class="flex items-center justify-center w-12 h-12 shadow-lg bg-white/20 backdrop-blur-lg rounded-xl logo-icon">
+                    <span class="text-2xl text-white material-symbols-outlined"
+                        style="font-variation-settings: 'FILL' 1;">
+                        garage
+                    </span>
                 </div>
                 <div>
                     <span class="block text-2xl font-bold text-white">Sewa Aja</span>

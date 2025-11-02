@@ -21,9 +21,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Customer Routes
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard/customer', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', function () {
+        return view('customer/dashboard');
+    })->name('customer.dashboard');
 
     Route::get('/profile', function () {
         return view('profile');

@@ -24,7 +24,7 @@ class CheckRole
         // Cek apakah user memiliki role yang diizinkan
         $user = Auth::user();
         if (!in_array($user->role, $roles)) {
-            abort(403, 'Unauthorized access.');
+            abort(403, 'sybau🥀.');
         }
 
         return $next($request);
