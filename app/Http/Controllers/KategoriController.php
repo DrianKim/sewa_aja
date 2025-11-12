@@ -25,13 +25,13 @@ class KategoriController extends Controller
     {
         $validatedData = $request->validate([
             'nama' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-        ],
-        [
+            'jenis' => 'required|string|max:255',
+        ], [
             'nama.required' => 'Nama kategori wajib diisi.',
             'nama.max' => 'Nama kategori maksimal 255 karakter.',
+            'jenis.required' => 'Jenis kategori wajib diisi.',
+            'jenis.max' => 'Jenis kategori maksimal 255 karakter.',
         ]);
-
         Kategori::create($validatedData);
 
         return redirect()->route('kategori.index')->with('success', 'Kategori berhasil ditambahkan.');
@@ -47,7 +47,7 @@ class KategoriController extends Controller
     {
         $validatedData = $request->validate([
             'nama' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
+            'jenis' => 'required|string|max:255',
         ]);
 
         $kategori = Kategori::findOrFail($id);

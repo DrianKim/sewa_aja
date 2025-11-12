@@ -10,6 +10,7 @@ class Kendaraan extends Model
 
     protected $fillable = [
         'kategori_id',
+        'nama',
         'merk',
         'model',
         'tahun',
@@ -20,4 +21,22 @@ class Kendaraan extends Model
         'foto',
         'keterangan',
     ];
+
+    public function kategori()
+    {
+        return $this->belongsTo(Kategori::class, 'kategori_id');
+    }
+
+    public function detail()
+    {
+        return $this->hasOne(Detail::class, 'kendaraan_id');
+    }
+
+    public function getFotoUrlAttribute()
+    {
+        if ($this->foto) {
+            return asset('storage/' . $this->foto);
+        }
+        return null;
+    }
 }

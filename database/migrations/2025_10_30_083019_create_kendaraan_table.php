@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('kendaraan', function (Blueprint $table) {
             $table->id();
             $table->foreignId('kategori_id')->constrained('kategori')->onDelete('cascade');
+            $table->string('nama');
             $table->string('merk');
             $table->string('model');
             $table->year('tahun');
             $table->string('no_plat')->unique();
             $table->string('warna')->nullable();
-            $table->enum('transmisi', ['Automatic', 'Manual']); // 🔥 kolom baru
+            $table->enum('transmisi', ['Automatic', 'Manual']);
             $table->integer('kapasitas_penumpang')->nullable();
             $table->text('foto')->nullable();
             $table->text('keterangan')->nullable();

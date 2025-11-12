@@ -14,7 +14,10 @@ return new class extends Migration
         Schema::create('detail', function (Blueprint $table) {
             $table->id();
             $table->foreignId('kendaraan_id')->constrained('kendaraan')->onDelete('cascade');
-            $table->decimal('harga_per_hari', 10, 2); 
+            $table->decimal('harga_per_hari', 10, 2);
+            $table->decimal('harga_per_minggu', 10, 2);
+            $table->decimal('harga_per_bulan', 10, 2);
+            $table->decimal('harga_per_tahun', 10, 2);
             $table->enum('status', ['tidak_tersedia', 'tersedia', 'pending', 'disewa'])->default('tidak_tersedia');
             $table->timestamps();
         });

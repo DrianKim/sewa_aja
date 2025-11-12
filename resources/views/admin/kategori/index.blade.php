@@ -28,7 +28,7 @@
                             <th class="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-700 uppercase">
                                 Nama</th>
                             <th class="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-700 uppercase">
-                                Deskripsi</th>
+                                Jenis</th>
                             <th
                                 class="w-48 px-6 py-4 text-xs font-semibold tracking-wider text-center text-gray-700 uppercase">
                                 <i class="fas fa-gear"></i>
@@ -47,7 +47,7 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-600">
-                                    {{ $kategori->deskripsi }}
+                                    {{ $kategori->jenis }}
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center justify-center gap-2">

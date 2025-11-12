@@ -53,20 +53,21 @@
                 @enderror
             </div>
 
-            <!-- Deskripsi -->
-            <div class="mb-8">
-                <label for="deskripsi" class="block mb-2 text-sm font-semibold text-gray-700">
-                    Deskripsi <span class="text-red-500">*</span>
+            <!-- Jenis -->
+            <div class="mb-6">
+                <label for="jenis" class="block mb-2 text-sm font-semibold text-gray-700">
+                    Jenis <span class="text-red-500">*</span>
                 </label>
                 <div class="relative">
-                    <div class="absolute pointer-events-none top-3 left-4">
-                        <i class="text-gray-400 fas fa-align-left"></i>
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                        <i class="text-gray-400 fas fa-list"></i>
                     </div>
-                    <textarea name="deskripsi" id="deskripsi" rows="4" required
-                        class="block w-full py-3 pl-12 pr-4 text-gray-900 placeholder-gray-400 transition-all duration-200 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 @error('deskripsi') border-red-500 @enderror"
-                        placeholder="Jelaskan kategori kendaraan ini secara detail...">{{ old('deskripsi') }}</textarea>
+                    <input type="text" name="jenis" id="jenis" required
+                        class="block w-full py-3 pl-12 pr-4 text-gray-900 placeholder-gray-400 transition-all duration-200 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 @error('jenis') border-red-500 @enderror"
+                        placeholder="Contoh: Sepeda Motor, Mobil Pribadi, Bus Pariwisata, dll"
+                        value="{{ old('jenis') }}">
                 </div>
-                @error('deskripsi')
+                @error('jenis')
                     <p class="mt-2 text-sm text-red-600">
                         <i class="mr-1 fas fa-exclamation-circle"></i>{{ $message }}
                     </p>
