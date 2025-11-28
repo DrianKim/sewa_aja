@@ -11,31 +11,42 @@ class KendaraanController extends Controller
 {
     public function index()
     {
-        $data_kendaraan = Kendaraan::with('kategori')->latest()->get();
+        $data_kendaraan = Kendaraan::with('kategori')->latest()->paginate(10);
         return view('admin.kendaraan.index', compact('data_kendaraan'));
     }
 
+    // untuk form create
     public function create()
     {
-        $kategori = Kategori::all();
+        // ambil kategori unik
+        $kategori = Kategori::select('nama_kategori')
+            ->distinct()
+            ->get();
+
         return view('admin.kendaraan.create', compact('kategori'));
+    }
+
+    public function getJenis($namaKategori)
+    {
+        $jenis = Kategori::where('nama_kategori', $namaKategori)->pluck('jenis');
+        return response()->json($jenis);
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'kategori_id' => 'required|exists:kategori,id',
-            'nama' => 'required|string|max:100',
-            'merk' => 'required|string|max:255',
-            'model' => 'required|string|max:255',
-            'tahun' => 'required|digits:4|integer|min:1900|max:' . date('Y'),
-            'no_plat' => 'required|unique:kendaraan,no_plat',
-            'warna' => 'nullable|string|max:100',
-            'transmisi' => 'required|in:Automatic,Manual',
-            'kapasitas_penumpang' => 'nullable|integer|min:1',
-            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:4096',
-            'keterangan' => 'nullable|string',
+            'id_kategori'     => 'required|string',
+            'jenis'           => 'required|string',
+            'merek'           => 'required|string|max:255',
+            'nama_kendaraan'  => 'required|string|max:255',
+            'deskripsi'       => 'nullable|string',
+            'foto'            => 'nullable|image|mimes:jpg,jpeg,png|max:4096',
         ]);
+
+        // Cari kategori berdasarkan nama_kategori DAN jenis
+        $kategori = Kategori::where('nama_kategori', $request->id_kategori)
+            ->where('jenis', $request->jenis)
+            ->firstOrFail();
 
         $fotoPath = null;
         if ($request->hasFile('foto')) {
@@ -43,20 +54,15 @@ class KendaraanController extends Controller
         }
 
         Kendaraan::create([
-            'kategori_id' => $request->kategori_id,
-            'nama' => $request->nama,
-            'merk' => $request->merk,
-            'model' => $request->model,
-            'tahun' => $request->tahun,
-            'no_plat' => $request->no_plat,
-            'warna' => $request->warna,
-            'transmisi' => $request->transmisi,
-            'kapasitas_penumpang' => $request->kapasitas_penumpang,
-            'foto' => $fotoPath,
-            'keterangan' => $request->keterangan,
+            'merek'          => $request->merek,
+            'nama_kendaraan' => $request->nama_kendaraan,
+            'id_kategori'    => $kategori->id, // Gunakan id dari kategori yang ditemukan
+            'status'         => 'Tersedia',
+            'foto'           => $fotoPath,
+            'deskripsi'      => $request->deskripsi,
         ]);
 
-        return redirect()->route('kendaraan.index')->with('success', 'Kendaraan berhasil ditambahkan!');
+        return redirect()->route('kendaraan.index')->with('success', 'Kendaraan berhasil ditambahkan.');
     }
 
     public function edit($id)
@@ -71,52 +77,46 @@ class KendaraanController extends Controller
         $kendaraan = Kendaraan::findOrFail($id);
 
         $request->validate([
-            'kategori_id' => 'required|exists:kategori,id',
-            'nama' => 'required|string|max:100',
-            'merk' => 'required|string|max:255',
-            'model' => 'required|string|max:255',
-            'tahun' => 'required|digits:4|integer|min:1900|max:' . date('Y'),
-            'no_plat' => 'required|unique:kendaraan,no_plat,' . $kendaraan->id,
-            'warna' => 'nullable|string|max:100',
-            'transmisi' => 'required|in:Automatic,Manual',
-            'kapasitas_penumpang' => 'nullable|integer|min:1',
-            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:4096',
-            'keterangan' => 'nullable|string',
+            'id_kategori'     => 'required|exists:kategori,id',
+            'merek'           => 'required|string|max:255',
+            'nama_kendaraan'  => 'required|string|max:255',
+            'deskripsi'       => 'nullable|string',
+            'status'          => 'required|in:Tersedia,Disewa,Perbaikan',
+            'foto'            => 'nullable|image|mimes:jpg,jpeg,png|max:4096',
         ]);
 
+        // Foto
         $fotoPath = $kendaraan->foto;
         if ($request->hasFile('foto')) {
             if ($fotoPath && Storage::disk('public')->exists($fotoPath)) {
                 Storage::disk('public')->delete($fotoPath);
             }
+
             $fotoPath = $request->file('foto')->store('kendaraan', 'public');
         }
 
         $kendaraan->update([
-            'kategori_id' => $request->kategori_id,
-            'nama' => $request->nama,
-            'merk' => $request->merk,
-            'model' => $request->model,
-            'tahun' => $request->tahun,
-            'no_plat' => $request->no_plat,
-            'warna' => $request->warna,
-            'transmisi' => $request->transmisi,
-            'kapasitas_penumpang' => $request->kapasitas_penumpang,
-            'foto' => $fotoPath,
-            'keterangan' => $request->keterangan,
+            'id_kategori'    => $request->id_kategori,
+            'merek'          => $request->merek,
+            'nama_kendaraan' => $request->nama_kendaraan,
+            'deskripsi'      => $request->deskripsi,
+            'status'         => $request->status,
+            'foto'           => $fotoPath,
         ]);
 
-        return redirect()->route('kendaraan.index')->with('success', 'Data kendaraan berhasil diperbarui!');
+        return redirect()->route('kendaraan.index')->with('success', 'Data kendaraan berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
         $kendaraan = Kendaraan::findOrFail($id);
+
         if ($kendaraan->foto && Storage::disk('public')->exists($kendaraan->foto)) {
             Storage::disk('public')->delete($kendaraan->foto);
         }
+
         $kendaraan->delete();
 
-        return redirect()->route('kendaraan.index')->with('success', 'Kendaraan berhasil dihapus!');
+        return redirect()->route('kendaraan.index')->with('success', 'Kendaraan berhasil dihapus.');
     }
 }

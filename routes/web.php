@@ -13,10 +13,12 @@ Route::get('/', function () {
 })->name('home');
 
 // Auth Routes
-Route::get('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/login', [AuthController::class, 'loginProses'])->name('login.proses');
-Route::get('/register', [AuthController::class, 'register'])->name('register');
-Route::post('/register', [AuthController::class, 'registerProses'])->name('register.proses');
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.proses');
+
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register.proses');
+
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Customer Routes
@@ -42,6 +44,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/kendaraan/{id}/edit', [KendaraanController::class, 'edit'])->name('kendaraan.edit');
     Route::put('/kendaraan/{id}', [KendaraanController::class, 'update'])->name('kendaraan.update');
     Route::delete('/kendaraan/{id}', [KendaraanController::class, 'destroy'])->name('kendaraan.destroy');
+
+    Route::get('/kategori/{namaKategori}/jenis', [KendaraanController::class, 'getJenis']);
 
     // Management Kategori
     Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');

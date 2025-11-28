@@ -9,11 +9,11 @@ class KategoriController extends Controller
 {
     public function index()
     {
-        $data = [
-            'data_kategori' => Kategori::all(),
-        ];
+        $data_kategori = Kategori::orderBy('nama_kategori')
+            ->orderBy('jenis')
+            ->paginate(10);
 
-        return view('admin.kategori.index', $data);
+        return view('admin.kategori.index', compact('data_kategori'));
     }
 
     public function create()
@@ -24,11 +24,11 @@ class KategoriController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'nama' => 'required|string|max:255',
+            'nama_kategori' => 'required|string|max:255',
             'jenis' => 'required|string|max:255',
         ], [
-            'nama.required' => 'Nama kategori wajib diisi.',
-            'nama.max' => 'Nama kategori maksimal 255 karakter.',
+            'nama_kategori.required' => 'Nama kategori wajib diisi.',
+            'nama_kategori.max' => 'Nama kategori maksimal 255 karakter.',
             'jenis.required' => 'Jenis kategori wajib diisi.',
             'jenis.max' => 'Jenis kategori maksimal 255 karakter.',
         ]);
@@ -46,7 +46,7 @@ class KategoriController extends Controller
     public function update(Request $request, $id)
     {
         $validatedData = $request->validate([
-            'nama' => 'required|string|max:255',
+            'nama_kategori' => 'required|string|max:255',
             'jenis' => 'required|string|max:255',
         ]);
 

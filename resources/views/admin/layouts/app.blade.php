@@ -38,9 +38,9 @@
             display: flex;
         }
 
-        /* Sidebar Gradient Animation */
+        /* Sidebar Gradient Animation - CHANGED TO BLUE */
         .sidebar-gradient {
-            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%);
             position: relative;
             overflow: hidden;
         }
@@ -134,18 +134,18 @@
         }
 
         .profile-dropdown:hover .profile-badge {
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
         }
 
-        /* Gradient Text */
+        /* Gradient Text - CHANGED TO BLUE */
         .gradient-text {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        /* Custom Scrollbar */
+        /* Custom Scrollbar - CHANGED TO BLUE */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -155,12 +155,12 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(180deg, #1e40af 0%, #3b82f6 100%);
             border-radius: 10px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #764ba2;
+            background: #1e40af;
         }
 
         /* Notification Badge */
@@ -220,7 +220,6 @@
             flex-direction: column;
             z-index: 40;
             width: 16rem;
-            /* 64, pastikan sesuai Tailwind */
             height: 100vh;
             position: fixed;
             left: 0;
@@ -254,6 +253,21 @@
             top: 0;
             z-index: 30;
         }
+
+        /* Notification Icon - CHANGED TO BLUE */
+        .notification-icon {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        }
+
+        /* Profile Badge - CHANGED TO BLUE */
+        .profile-badge {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        }
+
+        /* Profile Dropdown Background - CHANGED TO BLUE */
+        .profile-bg {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        }
     </style>
 </head>
 
@@ -264,10 +278,6 @@
         <div class="relative z-10 flex flex-col h-full">
             <!-- Logo Section -->
             <div class="flex items-center p-6 pb-4 space-x-3 border-b border-white/20">
-                {{-- <div
-                    class="flex items-center justify-center w-12 h-12 shadow-lg bg-white/20 backdrop-blur-lg rounded-xl logo-icon">
-                    <i class="text-xl text-white fas fa-car-side"></i>
-                </div> --}}
                 <div
                     class="flex items-center justify-center w-12 h-12 shadow-lg bg-white/20 backdrop-blur-lg rounded-xl logo-icon">
                     <span class="text-2xl text-white material-symbols-outlined"
@@ -328,19 +338,6 @@
 
             <!-- Sidebar Footer -->
             <div class="border-t sidebar-footer border-white/20">
-                <!-- Admin Info -->
-                {{-- <div class="p-4 mx-4 mb-3 bg-white/10 backdrop-blur-lg rounded-xl">
-                    <div class="flex items-center space-x-3">
-                        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-white/20">
-                            <i class="text-white fas fa-user"></i>
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-sm font-semibold text-white">{{ Auth::user()->name ?? 'Admin' }}</p>
-                            <p class="text-xs text-white/70">Administrator</p>
-                        </div>
-                    </div>
-                </div> --}}
-
                 <!-- Logout -->
                 <form method="POST" action="{{ route('logout') }}" id="logout-form" class="px-4">
                     @csrf
@@ -376,8 +373,7 @@
             <div class="flex items-center space-x-4">
                 <!-- Notification -->
                 <div class="relative transition-transform cursor-pointer hover:scale-110">
-                    <div
-                        class="flex items-center justify-center shadow-lg w-11 h-11 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl">
+                    <div class="flex items-center justify-center shadow-lg w-11 h-11 notification-icon rounded-xl">
                         <i class="text-white fas fa-bell"></i>
                     </div>
                     <span
@@ -389,9 +385,8 @@
 
                 <!-- Profile -->
                 <div
-                    class="flex items-center px-4 py-2 space-x-3 profile-dropdown bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl hover:shadow-md">
-                    <div
-                        class="flex items-center justify-center w-10 h-10 shadow-md profile-badge bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl">
+                    class="flex items-center px-4 py-2 space-x-3 profile-dropdown profile-bg rounded-xl hover:shadow-md">
+                    <div class="flex items-center justify-center w-10 h-10 shadow-md profile-badge rounded-xl">
                         <i class="text-white fas fa-user"></i>
                     </div>
                     <div>
@@ -459,7 +454,7 @@
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
+                    cancelButtonColor: '#1e40af',
                     confirmButtonText: 'Ya, Logout!',
                     cancelButtonText: 'Batal',
                     reverseButtons: true,
@@ -488,6 +483,7 @@
                 text: '{{ session('success') }}',
                 icon: 'success',
                 confirmButtonText: 'OK',
+                confirmButtonColor: '#1e40af',
                 customClass: {
                     popup: 'swal2-popup',
                     confirmButton: 'swal2-confirm'
@@ -501,6 +497,7 @@
                 text: '{{ session('error') }}',
                 icon: 'error',
                 confirmButtonText: 'OK',
+                confirmButtonColor: '#1e40af',
                 customClass: {
                     popup: 'swal2-popup',
                     confirmButton: 'swal2-confirm'

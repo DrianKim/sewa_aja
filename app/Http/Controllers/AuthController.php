@@ -2,22 +2,49 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
 
 class AuthController extends Controller
 {
-    public function login()
+    public function showRegister()
+    {
+        return view('auth.register');
+    }
+
+    public function register(Request $request)
+    {
+        $request->validate([
+            'nama'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email',
+            'no_hp'     => 'required|string|max:15',
+            'alamat'   => 'required|string',
+            'password' => 'required|min:6|confirmed',
+        ]);
+
+        $user = User::create([
+            'nama'     => $request->nama,
+            'email'    => $request->email,
+            'no_hp'     => $request->no_hp,
+            'alamat'   => $request->alamat,
+            'password' => Hash::make($request->password),
+            'role'     => 'customer',
+        ]);
+
+        Auth::login($user);
+
+        return redirect('/customer/dashboard')->with('success', 'Akun berhasil dibuat.');
+    }
+
+    public function showLogin()
     {
         return view('auth.login');
     }
 
-    public function loginProses(Request $request)
+    public function login(Request $request)
     {
-        // Validasi input
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:6',
@@ -28,15 +55,15 @@ class AuthController extends Controller
             'password.min' => 'Password minimal 6 karakter',
         ]);
 
-        // Di method loginProses
         if (Auth::attempt($credentials, $request->remember)) {
             $request->session()->regenerate();
 
-            // Redirect berdasarkan role
             if (Auth::user()->role === 'admin') {
-                return redirect()->route('admin.dashboard')->with('success', 'Selamat datang Admin!');
-            } else {
+                return redirect()->route('admin.dashboard')->with('success', 'Login Berhasil!');
+            } elseif (Auth::user()->role === 'customer') {
                 return redirect()->route('customer.dashboard')->with('success', 'Login berhasil!');
+            } else {
+                return redirect()->route('owner.dashboard')->with('success', 'Login berhasil!');
             }
         }
 
@@ -45,50 +72,11 @@ class AuthController extends Controller
         ])->onlyInput('email');
     }
 
-    public function register()
-    {
-        return view('auth.register');
-    }
-
-    public function registerProses(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6|confirmed',
-            'no_hp' => 'required|string|max:15',
-            'alamat' => 'required|string|max:500',
-        ], [
-            'name.required' => 'Nama lengkap wajib diisi',
-            'email.required' => 'Email wajib diisi',
-            'email.unique' => 'Email sudah terdaftar',
-            'password.required' => 'Password wajib diisi',
-            'password.confirmed' => 'Konfirmasi password tidak cocok',
-            'no_hp.required' => 'Nomor HP wajib diisi',
-            'alamat.required' => 'Alamat wajib diisi',
-        ]);
-
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'no_hp' => $validated['no_hp'],
-            'alamat' => $validated['alamat'],
-            'role' => 'customer',
-        ]);
-
-        // Auto login setelah register
-        Auth::login($user);
-
-        return redirect()->route('home')->with('success', 'Registrasi berhasil! Selamat datang di Sewa Aja.');
-    }
-
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
-        return redirect()->route('login')->with('success', 'Logout berhasil!');
+        return redirect('/login')->with('success', 'Berhasil logout.');
     }
 }

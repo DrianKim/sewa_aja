@@ -39,26 +39,26 @@
                     <i class="mt-1 mr-3 text-amber-600 fas fa-info-circle"></i>
                     <div>
                         <p class="text-sm font-medium text-amber-800">Informasi</p>
-                        <p class="text-sm text-amber-700">Anda sedang mengedit kategori: <strong>{{ $kategori->nama }}</strong></p>
+                        <p class="text-sm text-amber-700">Anda sedang mengedit kategori: <strong>{{ $kategori->nama_kategori }}</strong></p>
                     </div>
                 </div>
             </div>
 
             <!-- Nama Kategori -->
             <div class="mb-6">
-                <label for="nama" class="block mb-2 text-sm font-semibold text-gray-700">
+                <label for="nama_kategori" class="block mb-2 text-sm font-semibold text-gray-700">
                     Nama Kategori <span class="text-red-500">*</span>
                 </label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
                         <i class="text-gray-400 fas fa-tag"></i>
                     </div>
-                    <input type="text" name="nama" id="nama" required
-                        class="block w-full py-3 pl-12 pr-4 text-gray-900 placeholder-gray-400 transition-all duration-200 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 hover:border-gray-400 @error('nama') border-red-500 @enderror"
+                    <input type="text" name="nama_kategori" id="nama_kategori" required
+                        class="block w-full py-3 pl-12 pr-4 text-gray-900 placeholder-gray-400 transition-all duration-200 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 hover:border-gray-400 @error('nama_kategori') border-red-500 @enderror"
                         placeholder="Contoh: Motor, Mobil, Bus, dll"
-                        value="{{ old('nama', $kategori->nama) }}">
+                        value="{{ old('nama_kategori', $kategori->nama_kategori) }}">
                 </div>
-                @error('nama')
+                @error('nama_kategori')
                     <p class="mt-2 text-sm text-red-600">
                         <i class="mr-1 fas fa-exclamation-circle"></i>{{ $message }}
                     </p>

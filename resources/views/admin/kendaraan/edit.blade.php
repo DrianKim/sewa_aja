@@ -1,27 +1,30 @@
 @extends('admin.layouts.app')
-@section('title', 'Kendaraan')
+@section('title', 'Edit Kendaraan - Sewa Aja')
 
 @section('content')
-    <div class="container px-6 py-1 mx-auto">
-        <div class="overflow-hidden bg-white rounded-lg shadow-lg">
-            <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-amber-500 to-amber-600">
+    <div class="container px-6 py-8 mx-auto">
+        <div class="overflow-hidden bg-white shadow-lg rounded-xl">
+            <!-- Header -->
+            <div class="px-8 py-6 border-b border-amber-100 bg-gradient-to-r from-amber-500 to-amber-600">
                 <div class="flex items-center">
-                    <div class="flex items-center justify-center w-10 h-10 mr-4 bg-white rounded-lg shadow-md">
-                        <i class="text-lg text-amber-600 fas fa-edit"></i>
+                    <div class="flex items-center justify-center w-12 h-12 mr-4 bg-white shadow-md rounded-xl">
+                        <i class="text-xl text-amber-600 fas fa-edit"></i>
                     </div>
                     <div>
                         <h2 class="text-2xl font-bold text-white">Edit Kendaraan</h2>
-                        <p class="text-sm text-amber-100">Perbarui informasi kendaraan</p>
+                        <p class="mt-1 text-sm text-amber-100">Perbarui informasi kendaraan</p>
                     </div>
                 </div>
             </div>
 
+            <!-- Form -->
             <form action="{{ route('kendaraan.update', $kendaraan->id) }}" method="POST" enctype="multipart/form-data"
                 class="p-8">
                 @csrf
                 @method('PUT')
 
-                <div class="p-4 mb-6 border-l-4 rounded-r-lg border-amber-500 bg-amber-50">
+                <!-- Informasi Edit -->
+                <div class="p-4 mb-8 border-l-4 rounded-r-lg border-amber-500 bg-amber-50">
                     <div class="flex items-start">
                         <i class="mt-1 mr-3 text-amber-600 fas fa-info-circle"></i>
                         <div>
@@ -32,138 +35,161 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+                    <!-- Merek -->
                     <div>
-                        <label class="block mb-2 text-sm font-semibold text-gray-700">Kategori <span
-                                class="text-red-500">*</span></label>
-                        <select name="kategori_id" required
-                            class="block w-full px-4 py-3 border border-gray-300 rounded-lg">
-                            <option value hidden="">Pilih kategori</option>
-                            @foreach ($kategori as $k)
-                                <option value="{{ $k->id }}"
-                                    {{ old('kategori_id', $kendaraan->kategori_id) == $k->id ? 'selected' : '' }}>
-                                    {{ $k->nama }}</option>
-                            @endforeach
-                        </select>
-                        @error('kategori_id')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        <label for="merek" class="block mb-3 text-sm font-semibold text-gray-700">
+                            Merek <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                <i class="text-gray-400 fas fa-car"></i>
+                            </div>
+                            <input type="text" name="merek" id="merek" value="{{ old('merek', $kendaraan->merk) }}"
+                                required
+                                class="block w-full py-3.5 pl-12 pr-4 text-gray-900 placeholder-gray-400 transition-all duration-200 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 hover:border-gray-400 @error('merek') border-red-500 @enderror"
+                                placeholder="Contoh: Toyota, Honda, Yamaha">
+                        </div>
+                        @error('merek')
+                            <p class="flex items-center mt-2 text-sm text-red-600">
+                                <i class="mr-2 fas fa-exclamation-circle"></i>{{ $message }}
+                            </p>
                         @enderror
                     </div>
 
+                    <!-- Nama Kendaraan -->
                     <div>
-                        <label class="block mb-2 text-sm font-semibold text-gray-700">
+                        <label for="nama_kendaraan" class="block mb-3 text-sm font-semibold text-gray-700">
                             Nama Kendaraan <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="nama" value="{{ old('nama', $kendaraan->nama) }}" required
-                            class="block w-full px-4 py-3 border border-gray-300 rounded-lg">
-                        @error('nama')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                <i class="text-gray-400 fas fa-car-side"></i>
+                            </div>
+                            <input type="text" name="nama_kendaraan" id="nama_kendaraan"
+                                value="{{ old('nama_kendaraan', $kendaraan->nama) }}" required
+                                class="block w-full py-3.5 pl-12 pr-4 text-gray-900 placeholder-gray-400 transition-all duration-200 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 hover:border-gray-400 @error('nama_kendaraan') border-red-500 @enderror"
+                                placeholder="Contoh: Avanza, Civic, NMAX">
+                        </div>
+                        @error('nama_kendaraan')
+                            <p class="flex items-center mt-2 text-sm text-red-600">
+                                <i class="mr-2 fas fa-exclamation-circle"></i>{{ $message }}
+                            </p>
                         @enderror
                     </div>
 
+                    <!-- Kategori -->
                     <div>
-                        <label class="block mb-2 text-sm font-semibold text-gray-700">Merk <span
-                                class="text-red-500">*</span></label>
-                        <input type="text" name="merk" value="{{ old('merk', $kendaraan->merk) }}" required
-                            class="block w-full px-4 py-3 border border-gray-300 rounded-lg">
-                        @error('merk')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        <label for="id_kategori" class="block mb-3 text-sm font-semibold text-gray-700">
+                            Kategori <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                <i class="text-gray-400 fas fa-tags"></i>
+                            </div>
+                            <select name="id_kategori" id="id_kategori" required
+                                class="block w-full py-3.5 pl-12 pr-4 text-gray-900 transition-all duration-200 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 hover:border-gray-400 @error('id_kategori') border-red-500 @enderror">
+                                <option value="" selected hidden>Pilih kategori</option>
+                                @foreach ($kategori as $k)
+                                    <option value="{{ $k->nama_kategori }}"
+                                        {{ old('id_kategori', $kendaraan->kategori_id) == $k->id ? 'selected' : '' }}>
+                                        {{ $k->nama_kategori }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @error('id_kategori')
+                            <p class="flex items-center mt-2 text-sm text-red-600">
+                                <i class="mr-2 fas fa-exclamation-circle"></i>{{ $message }}
+                            </p>
                         @enderror
                     </div>
 
+                    <!-- Jenis -->
                     <div>
-                        <label class="block mb-2 text-sm font-semibold text-gray-700">Model <span
-                                class="text-red-500">*</span></label>
-                        <input type="text" name="model" value="{{ old('model', $kendaraan->model) }}" required
-                            class="block w-full px-4 py-3 border border-gray-300 rounded-lg">
-                        @error('model')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        <label for="jenis" class="block mb-3 text-sm font-semibold text-gray-700">
+                            Jenis
+                            <span class="text-xs text-gray-400">(Pilih kategori terlebih dahulu)</span>
+                            <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                <i class="text-gray-400 fas fa-list"></i>
+                            </div>
+                            <select name="jenis" id="jenis" required
+                                class="block w-full py-3.5 pl-12 pr-4 text-gray-900 transition-all duration-200 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 hover:border-gray-400 @error('jenis') border-red-500 @enderror">
+                                <option value="" selected hidden>Pilih jenis</option>
+                                @if (old('jenis', $kendaraan->model))
+                                    <option value="{{ old('jenis', $kendaraan->model) }}" selected>
+                                        {{ old('jenis', $kendaraan->model) }}</option>
+                                @endif
+                            </select>
+                        </div>
+                        @error('jenis')
+                            <p class="flex items-center mt-2 text-sm text-red-600">
+                                <i class="mr-2 fas fa-exclamation-circle"></i>{{ $message }}
+                            </p>
                         @enderror
                     </div>
 
-                    <div>
-                        <label class="block mb-2 text-sm font-semibold text-gray-700">Tahun <span
-                                class="text-red-500">*</span></label>
-                        <input type="number" name="tahun" value="{{ old('tahun', $kendaraan->tahun) }}" required
-                            class="block w-full px-4 py-3 border border-gray-300 rounded-lg" min="1900"
-                            max="{{ date('Y') }}">
-                        @error('tahun')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label class="block mb-2 text-sm font-semibold text-gray-700">No. Plat <span
-                                class="text-red-500">*</span></label>
-                        <input type="text" name="no_plat" value="{{ old('no_plat', $kendaraan->no_plat) }}" required
-                            class="block w-full px-4 py-3 border border-gray-300 rounded-lg">
-                        @error('no_plat')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label class="block mb-2 text-sm font-semibold text-gray-700">Warna</label>
-                        <input type="text" name="warna" value="{{ old('warna', $kendaraan->warna) }}"
-                            class="block w-full px-4 py-3 border border-gray-300 rounded-lg">
-                        @error('warna')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label class="block mb-2 text-sm font-semibold text-gray-700">Transmisi <span
-                                class="text-red-500">*</span></label>
-                        <select name="transmisi" required class="block w-full px-4 py-3 border border-gray-300 rounded-lg">
-                            <option value="Automatic"
-                                {{ old('transmisi', $kendaraan->transmisi) == 'Automatic' ? 'selected' : '' }}>Automatic
-                            </option>
-                            <option value="Manual"
-                                {{ old('transmisi', $kendaraan->transmisi) == 'Manual' ? 'selected' : '' }}>Manual</option>
-                        </select>
-                        @error('transmisi')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label class="block mb-2 text-sm font-semibold text-gray-700">Kapasitas Penumpang</label>
-                        <input type="number" name="kapasitas_penumpang"
-                            value="{{ old('kapasitas_penumpang', $kendaraan->kapasitas_penumpang) }}"
-                            class="block w-full px-4 py-3 border border-gray-300 rounded-lg" min="1">
-                        @error('kapasitas_penumpang')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
+                    <!-- Foto Kendaraan -->
                     <div class="md:col-span-2">
-                        <label class="block mb-2 text-sm font-semibold text-gray-700">Foto Kendaraan</label>
-                        <input type="file" name="foto" id="fotoInputEdit" accept="image/*"
-                            class="block w-full text-sm text-gray-600">
-                        <img id="previewFotoEdit" src="{{ $kendaraan->foto_url ?? '' }}" alt="Preview Foto"
-                            class="mt-3 w-full max-h-56 object-contain rounded-lg {{ $kendaraan->foto ? '' : 'hidden' }}">
+                        <label for="foto" class="block mb-3 text-sm font-semibold text-gray-700">
+                            Foto Kendaraan
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                <i class="text-gray-400 fas fa-camera"></i>
+                            </div>
+                            <input type="file" name="foto" id="foto" accept="image/*"
+                                class="block w-full py-3.5 pl-12 pr-4 text-sm text-gray-600 transition-all duration-200 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 hover:border-gray-400 @error('foto') border-red-500 @enderror">
+                        </div>
                         @error('foto')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            <p class="flex items-center mt-2 text-sm text-red-600">
+                                <i class="mr-2 fas fa-exclamation-circle"></i>{{ $message }}
+                            </p>
                         @enderror
+
+                        <!-- Preview Foto -->
+                        <div id="previewContainer" class="{{ $kendaraan->foto ? '' : 'hidden' }} mt-4">
+                            <p class="mb-2 text-sm font-medium text-gray-700">Preview Foto:</p>
+                            <img id="previewFoto" src="{{ $kendaraan->foto_url ?? '' }}" alt="Preview Foto"
+                                class="object-contain w-full rounded-lg shadow-md max-h-64">
+                        </div>
                     </div>
 
+                    <!-- Deskripsi -->
                     <div class="md:col-span-2">
-                        <label class="block mb-2 text-sm font-semibold text-gray-700">Keterangan</label>
-                        <textarea name="keterangan" rows="4" class="block w-full px-4 py-3 border border-gray-300 rounded-lg">{{ old('keterangan', $kendaraan->keterangan) }}</textarea>
-                        @error('keterangan')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        <label for="deskripsi" class="block mb-3 text-sm font-semibold text-gray-700">
+                            Deskripsi
+                        </label>
+                        <div class="relative">
+                            <div class="absolute pointer-events-none top-3 left-3">
+                                <i class="text-gray-400 fas fa-file-alt"></i>
+                            </div>
+                            <textarea name="deskripsi" id="deskripsi" rows="4"
+                                class="block w-full py-3 pl-12 pr-4 text-gray-900 placeholder-gray-400 transition-all duration-200 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 hover:border-gray-400 @error('deskripsi') border-red-500 @enderror"
+                                placeholder="Deskripsi detail tentang kendaraan...">{{ old('deskripsi', $kendaraan->keterangan) }}</textarea>
+                        </div>
+                        @error('deskripsi')
+                            <p class="flex items-center mt-2 text-sm text-red-600">
+                                <i class="mr-2 fas fa-exclamation-circle"></i>{{ $message }}
+                            </p>
                         @enderror
                     </div>
                 </div>
 
-                <div class="flex items-center justify-end pt-6 space-x-3 border-t border-gray-200">
+                <!-- Buttons -->
+                <div class="flex items-center justify-end pt-8 space-x-4 border-t border-amber-100">
                     <a href="{{ route('kendaraan.index') }}"
-                        class="inline-flex items-center px-6 py-3 text-sm font-semibold text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
-                        <i class="mr-2 fas fa-times"></i> Batal
+                        class="inline-flex items-center px-6 py-3 text-sm font-semibold text-amber-700 transition-all duration-200 bg-white border-2 border-amber-200 rounded-xl hover:bg-amber-50 hover:border-amber-300 hover:shadow-md transform hover:-translate-y-0.5">
+                        <i class="mr-2 fas fa-arrow-left"></i>
+                        Kembali
                     </a>
                     <button type="submit"
-                        class="inline-flex items-center px-6 py-3 text-sm font-semibold text-white rounded-lg bg-gradient-to-r from-amber-500 to-amber-600">
-                        <i class="mr-2 fas fa-save"></i> Update Kendaraan
+                        class="inline-flex items-center px-8 py-3.5 text-sm font-semibold text-white transition-all duration-200 bg-gradient-to-r from-amber-500 to-amber-600 rounded-xl shadow-lg hover:from-amber-600 hover:to-amber-700 hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0">
+                        <i class="mr-2 fas fa-save"></i>
+                        Update Kendaraan
                     </button>
                 </div>
             </form>
@@ -171,20 +197,97 @@
     </div>
 
     <script>
-        document.getElementById('fotoInputEdit')?.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            const preview = document.getElementById('previewFotoEdit');
-            if (!file) {
-                // hide if no file and no existing foto
-                if (!preview.src) preview.classList.add('hidden');
-                return;
+        document.addEventListener('DOMContentLoaded', function() {
+            const kategoriSelect = document.getElementById('id_kategori');
+            const jenisSelect = document.getElementById('jenis');
+
+            // Load jenis berdasarkan kategori yang sudah dipilih
+            if (kategoriSelect.value) {
+                loadJenis(kategoriSelect.value);
             }
-            const reader = new FileReader();
-            reader.onload = function(ev) {
-                preview.src = ev.target.result;
-                preview.classList.remove('hidden');
+
+            kategoriSelect.addEventListener('change', function() {
+                loadJenis(this.value);
+            });
+
+            function loadJenis(kategori) {
+                if (!kategori) {
+                    jenisSelect.innerHTML = '<option value="">Pilih kategori dulu</option>';
+                    return;
+                }
+
+                const encodedKategori = encodeURIComponent(kategori);
+
+                fetch(`/admin/kategori/${encodedKategori}/jenis`)
+                    .then(res => {
+                        if (!res.ok) throw new Error('Network error');
+                        return res.json();
+                    })
+                    .then(data => {
+                        const currentJenis = "{{ old('jenis', $kendaraan->model) }}";
+                        jenisSelect.innerHTML = '<option value="">Pilih jenis</option>';
+                        data.forEach(j => {
+                            const selected = j === currentJenis ? 'selected' : '';
+                            jenisSelect.innerHTML += `<option value="${j}" ${selected}>${j}</option>`;
+                        });
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                        jenisSelect.innerHTML = '<option value="">Error loading data</option>';
+                    });
             }
-            reader.readAsDataURL(file);
+
+            // Preview foto
+            const fotoInput = document.getElementById('foto');
+            const previewContainer = document.getElementById('previewContainer');
+            const previewFoto = document.getElementById('previewFoto');
+
+            if (fotoInput) {
+                fotoInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (!file) {
+                        // Jika tidak ada file baru dipilih, tetap tampilkan foto lama
+                        if (!previewFoto.src) {
+                            previewContainer.classList.add('hidden');
+                        }
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function(ev) {
+                        previewFoto.src = ev.target.result;
+                        previewContainer.classList.remove('hidden');
+                    }
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // Success message handler
+            @if (session('success'))
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: '{{ session('success') }}',
+                    icon: 'success',
+                    confirmButtonColor: '#f59e0b',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        popup: 'animated fadeInDown faster'
+                    }
+                });
+            @endif
+
+            @if (session('error'))
+                Swal.fire({
+                    title: 'Error!',
+                    text: '{{ session('error') }}',
+                    icon: 'error',
+                    confirmButtonColor: '#f59e0b',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        popup: 'animated fadeInDown faster'
+                    }
+                });
+            @endif
         });
     </script>
 @endsection

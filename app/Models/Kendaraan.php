@@ -7,36 +7,27 @@ use Illuminate\Database\Eloquent\Model;
 class Kendaraan extends Model
 {
     protected $table = 'kendaraan';
-
     protected $fillable = [
-        'kategori_id',
-        'nama',
-        'merk',
-        'model',
-        'tahun',
-        'no_plat',
-        'warna',
-        'transmisi',
-        'kapasitas_penumpang',
+        'merek',
+        'nama_kendaraan',
+        'id_kategori',
+        'status',
         'foto',
-        'keterangan',
+        'deskripsi'
     ];
 
     public function kategori()
     {
-        return $this->belongsTo(Kategori::class, 'kategori_id');
+        return $this->belongsTo(Kategori::class, 'id_kategori');
     }
 
-    public function detail()
+    public function harga()
     {
-        return $this->hasOne(Detail::class, 'kendaraan_id');
+        return $this->hasMany(Harga::class, 'id_kendaraan');
     }
 
-    public function getFotoUrlAttribute()
+    public function rental()
     {
-        if ($this->foto) {
-            return asset('storage/' . $this->foto);
-        }
-        return null;
+        return $this->hasMany(Rental::class, 'id_kendaraan');
     }
 }

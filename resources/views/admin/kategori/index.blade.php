@@ -1,15 +1,20 @@
+@php
+    // Ambil semua data tanpa pagination untuk grouping
+    $allKategori = App\Models\Kategori::orderBy('nama_kategori')->orderBy('jenis')->get();
+    $kategoris = $allKategori->groupBy('nama_kategori');
+@endphp
 @extends('admin.layouts.app')
 @section('title', 'Kategori')
 
 @section('content')
     <div class="container px-6 py-1 mx-auto">
-        <div class="overflow-hidden bg-white rounded-lg shadow-lg">
+        <div class="overflow-hidden bg-white shadow-lg rounded-xl">
             <!-- Header dengan button tambah -->
             <div
-                class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-500 to-blue-600">
+                class="flex items-center justify-between px-6 py-4 border-b border-blue-100 bg-gradient-to-r from-blue-600 to-blue-700">
                 <h2 class="text-2xl font-bold text-white">Data Kategori</h2>
                 <a href="{{ route('kategori.create') }}"
-                    class="inline-flex items-center px-4 py-2 bg-white text-blue-600 font-semibold rounded-lg shadow-md hover:bg-blue-50 hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200">
+                    class="inline-flex items-center px-4 py-2.5 bg-white text-blue-600 font-semibold rounded-lg shadow-md hover:bg-blue-50 hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
@@ -36,53 +41,76 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
-                        @forelse ($data_kategori as $kategori)
-                            <tr class="transition-colors duration-150 hover:bg-gray-50">
-                                <td class="px-6 py-4 text-sm text-gray-900">
-                                    {{ $loop->iteration }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span class="text-sm font-medium text-gray-900">
-                                        {{ $kategori->nama }}
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-600">
-                                    {{ $kategori->jenis }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center justify-center gap-2">
-                                        <a href="{{ route('kategori.edit', $kategori->id) }}"
-                                            class="inline-flex items-center px-3 py-1.5 bg-amber-500 text-white text-sm font-medium rounded-md hover:bg-amber-600 transition-colors duration-200">
-                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                            </svg>
-                                        </a>
-                                        <form action="{{ route('kategori.destroy', $kategori->id) }}" method="POST"
-                                            class="inline delete-form"
-                                            data-kategori-nama="{{ $kategori->nama }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button"
-                                                class="delete-btn inline-flex items-center px-3 py-1.5 bg-red-500 text-white text-sm font-medium rounded-md hover:bg-red-600 transition-colors duration-200">
-                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                </svg>
-                                            </button>
-                                        </form>
+                        @forelse ($kategoris as $namaKategori => $items)
+                            {{-- Row Judul (Nama Kategori) --}}
+                            <tr class="bg-blue-50">
+                                <td class="px-6 py-4 font-semibold text-gray-900" colspan="4">
+                                    <div class="flex items-center">
+                                        <i class="mr-3 text-blue-600 fas fa-folder"></i>
+                                        {{ $namaKategori }}
                                     </div>
                                 </td>
                             </tr>
+
+                            {{-- List Jenis di bawahnya --}}
+                            @foreach ($items as $index => $item)
+                                <tr class="transition-colors duration-150 hover:bg-gray-50">
+                                    <td class="px-6 py-4 text-sm text-gray-900">
+                                        {{ $index + 1 }}
+                                    </td>
+
+                                    <td class="px-6 py-4">
+                                        {{-- kosong, karena nama udah di atas --}}
+                                    </td>
+
+                                    <td class="px-6 py-4 text-sm text-gray-700">
+                                        <div class="flex items-center">
+                                            <i class="mr-3 text-gray-400 fas fa-chevron-right"></i>
+                                            {{ $item->jenis }}
+                                        </div>
+                                    </td>
+
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center justify-center gap-2">
+                                            <a href="{{ route('kategori.edit', $item->id) }}"
+                                                class="inline-flex items-center px-3 py-1.5 bg-amber-500 text-white text-sm font-medium rounded-md hover:bg-amber-600 transition-colors duration-200"
+                                                title="Edit Jenis">
+                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                </svg>
+                                            </a>
+
+                                            <form action="{{ route('kategori.destroy', $item->id) }}" method="POST"
+                                                class="inline delete-form" data-kategori-nama="{{ $item->jenis }}">
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button type="button"
+                                                    class="delete-btn inline-flex items-center px-3 py-1.5 bg-red-500 text-white text-sm font-medium rounded-md hover:bg-red-600 transition-colors duration-200"
+                                                    title="Hapus Jenis">
+                                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
                         @empty
                             <tr>
                                 <td colspan="4" class="px-6 py-8 text-center">
                                     <div class="flex flex-col items-center justify-center">
                                         <i class="mb-3 text-5xl text-gray-300 fas fa-folder-open"></i>
                                         <p class="text-sm font-medium text-gray-500">Tidak ada data kategori</p>
-                                        <p class="mt-1 text-xs text-gray-400">Klik tombol "Tambah Kategori" untuk menambahkan data baru</p>
+                                        <p class="mt-1 text-xs text-gray-400">
+                                            Klik "Tambah Kategori" untuk membuat data.
+                                        </p>
                                     </div>
                                 </td>
                             </tr>
@@ -90,6 +118,33 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- Pagination (jika perlu, tapi dengan grouping mungkin tidak sesuai) -->
+            {{-- @if ($data_kategori->hasPages())
+                <div class="px-6 py-4 border-t border-blue-100 bg-blue-50">
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm text-blue-700">
+                            Menampilkan {{ $data_kategori->firstItem() }} - {{ $data_kategori->lastItem() }} dari
+                            {{ $data_kategori->total() }} kategori
+                        </p>
+                        <div class="flex space-x-2">
+                            @if ($data_kategori->onFirstPage())
+                                <span class="px-3 py-1 text-sm text-blue-400 bg-blue-100 rounded-lg">Sebelumnya</span>
+                            @else
+                                <a href="{{ $data_kategori->previousPageUrl() }}"
+                                    class="px-3 py-1 text-sm text-blue-700 transition-colors duration-200 bg-white rounded-lg shadow-sm hover:bg-blue-50">Sebelumnya</a>
+                            @endif
+
+                            @if ($data_kategori->hasMorePages())
+                                <a href="{{ $data_kategori->nextPageUrl() }}"
+                                    class="px-3 py-1 text-sm text-blue-700 transition-colors duration-200 bg-white rounded-lg shadow-sm hover:bg-blue-50">Selanjutnya</a>
+                            @else
+                                <span class="px-3 py-1 text-sm text-blue-400 bg-blue-100 rounded-lg">Selanjutnya</span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endif --}}
         </div>
     </div>
 
@@ -107,22 +162,22 @@
                     const kategoriNama = form.getAttribute('data-kategori-nama');
 
                     Swal.fire({
-                        title: 'Hapus Kategori?',
-                        html: `Anda yakin ingin menghapus kategori <strong>${kategoriNama}</strong>?`,
+                        title: 'Hapus Jenis Kategori?',
+                        html: `Anda yakin ingin menghapus jenis <strong>"${kategoriNama}"</strong>?`,
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#ef4444',
-                        cancelButtonColor: '#6b7280',
-                        confirmButtonText: '<i class="mr-1 fas fa-trash"></i> Ya, Hapus!',
-                        cancelButtonText: '<i class="mr-1 fas fa-times"></i> Batal',
+                        cancelButtonColor: '#3b82f6',
+                        confirmButtonText: '<i class="mr-2 fas fa-trash"></i> Ya, Hapus!',
+                        cancelButtonText: '<i class="mr-2 fas fa-times"></i> Batal',
                         reverseButtons: true,
                         focusCancel: true,
                         customClass: {
                             popup: 'animated fadeInDown faster',
-                            confirmButton: 'px-5 py-2.5',
-                            cancelButton: 'px-5 py-2.5'
+                            confirmButton: 'px-5 py-2.5 rounded-lg',
+                            cancelButton: 'px-5 py-2.5 rounded-lg'
                         },
-                        buttonsStyling: true
+                        buttonsStyling: true,
                     }).then((result) => {
                         if (result.isConfirmed) {
                             // Show loading
@@ -133,7 +188,7 @@
                                 allowEscapeKey: false,
                                 didOpen: () => {
                                     Swal.showLoading();
-                                }
+                                },
                             });
 
                             // Submit form
@@ -142,6 +197,47 @@
                     });
                 });
             });
+
+            // Success message handler
+            @if (session('success'))
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: '{{ session('success') }}',
+                    icon: 'success',
+                    confirmButtonColor: '#3b82f6',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        popup: 'animated fadeInDown faster'
+                    }
+                });
+            @endif
+
+            @if (session('error'))
+                Swal.fire({
+                    title: 'Error!',
+                    text: '{{ session('error') }}',
+                    icon: 'error',
+                    confirmButtonColor: '#3b82f6',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        popup: 'animated fadeInDown faster'
+                    }
+                });
+            @endif
         });
     </script>
+
+    <style>
+        .rounded-xl {
+            border-radius: 12px;
+        }
+
+        .shadow-lg {
+            box-shadow: 0 10px 25px -3px rgba(59, 130, 246, 0.1), 0 4px 6px -2px rgba(59, 130, 246, 0.05);
+        }
+
+        .hover\:shadow-md:hover {
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.1), 0 4px 6px -2px rgba(59, 130, 246, 0.05);
+        }
+    </style>
 @endsection
