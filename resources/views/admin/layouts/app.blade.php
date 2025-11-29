@@ -298,8 +298,8 @@
                     <li>
                         <a href="{{ route('admin.dashboard') }}"
                             class="menu-item flex items-center px-4 py-3 rounded-xl
-                           {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                            <i class="w-5 mr-4 text-lg fas fa-tachometer-alt"></i>
+       {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                            <i class="w-5 mr-4 text-lg fas fa-chart-pie"></i>
                             <span class="font-medium">Dashboard</span>
                         </a>
                     </li>
@@ -308,8 +308,8 @@
                     <li>
                         <a href="{{ route('kendaraan.index') }}"
                             class="menu-item flex items-center px-4 py-3 rounded-xl
-                           {{ request()->routeIs('kendaraan.*') ? 'active' : '' }}">
-                            <i class="w-5 mr-4 text-lg fas fa-car"></i>
+       {{ request()->routeIs('kendaraan.*') ? 'active' : '' }}">
+                            <i class="w-5 mr-4 text-lg fas fa-car-side"></i>
                             <span class="font-medium">Data Kendaraan</span>
                         </a>
                     </li>
@@ -318,21 +318,56 @@
                     <li>
                         <a href="{{ route('kategori.index') }}"
                             class="menu-item flex items-center px-4 py-3 rounded-xl
-                           {{ request()->routeIs('kategori.*') ? 'active' : '' }}">
-                            <i class="w-5 mr-4 text-lg fas fa-tags"></i>
+       {{ request()->routeIs('kategori.*') ? 'active' : '' }}">
+                            <i class="w-5 mr-4 text-lg fas fa-layer-group"></i>
                             <span class="font-medium">Kategori</span>
                         </a>
                     </li>
 
-                    <!-- Detail -->
+                    <!-- Harga -->
                     <li>
-                        <a href="{{ route('detail.index') }}"
+                        <a href="{{ route('harga.index') }}"
                             class="menu-item flex items-center px-4 py-3 rounded-xl
-                           {{ request()->routeIs('detail.*') ? 'active' : '' }}">
-                            <i class="w-5 mr-4 text-lg fas fa-list-alt"></i>
-                            <span class="font-medium">Detail Kendaraan</span>
+    {{ request()->routeIs('harga.*') ? 'active' : '' }}">
+                            <i class="w-5 mr-4 text-lg fas fa-tag"></i>
+                            <span class="font-medium">Harga</span>
                         </a>
                     </li>
+
+                    <!-- Sewa -->
+                    <li>
+                        <a href="#" class="menu-item flex items-center px-4 py-3 rounded-xl">
+                            <i class="w-5 mr-4 text-lg fas fa-handshake"></i>
+                            <span class="font-medium">Sewa</span>
+                        </a>
+                    </li>
+
+                    <!-- Pembayaran -->
+                    <li>
+                        <a href="#" class="menu-item flex items-center px-4 py-3 rounded-xl">
+                            <i class="w-5 mr-4 text-lg fas fa-credit-card"></i>
+                            <span class="font-medium">Pembayaran</span>
+                        </a>
+                    </li>
+
+                    <!-- Laporan Admin -->
+                    <li>
+                        <a href="#" class="menu-item flex items-center px-4 py-3 rounded-xl">
+                            <i class="w-5 mr-4 text-lg fas fa-chart-bar"></i>
+                            <span class="font-medium">Laporan Admin</span>
+                        </a>
+                    </li>
+
+                    <!-- Manajemen User -->
+                    <li>
+                        <a href="{{ route('user.index') }}"
+                            class="menu-item flex items-center px-4 py-3 rounded-xl
+                                {{ request()->routeIs('user.*') ? 'active' : '' }}">
+                            <i class="w-5 mr-4 text-lg fas fa-users-cog"></i>
+                            <span class="font-medium">Manajemen User</span>
+                        </a>
+                    </li>
+
                 </ul>
             </div>
 

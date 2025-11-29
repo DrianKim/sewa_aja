@@ -29,8 +29,10 @@
                         <i class="mt-1 mr-3 text-amber-600 fas fa-info-circle"></i>
                         <div>
                             <p class="text-sm font-medium text-amber-800">Informasi</p>
-                            <p class="text-sm text-amber-700">Anda sedang mengedit kendaraan: <strong>{{ $kendaraan->merk }}
-                                    {{ $kendaraan->model }}</strong></p>
+                            <p class="text-sm text-amber-700">Anda sedang mengedit kendaraan:
+                                <strong>{{ $kendaraan->merek }}
+                                    {{ $kendaraan->nama_kendaraan }}</strong>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -45,8 +47,8 @@
                             <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
                                 <i class="text-gray-400 fas fa-car"></i>
                             </div>
-                            <input type="text" name="merek" id="merek" value="{{ old('merek', $kendaraan->merk) }}"
-                                required
+                            <input type="text" name="merek" id="merek"
+                                value="{{ old('merek', $kendaraan->merek) }}" required
                                 class="block w-full py-3.5 pl-12 pr-4 text-gray-900 placeholder-gray-400 transition-all duration-200 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 hover:border-gray-400 @error('merek') border-red-500 @enderror"
                                 placeholder="Contoh: Toyota, Honda, Yamaha">
                         </div>
@@ -67,7 +69,7 @@
                                 <i class="text-gray-400 fas fa-car-side"></i>
                             </div>
                             <input type="text" name="nama_kendaraan" id="nama_kendaraan"
-                                value="{{ old('nama_kendaraan', $kendaraan->nama) }}" required
+                                value="{{ old('nama_kendaraan', $kendaraan->nama_kendaraan) }}" required
                                 class="block w-full py-3.5 pl-12 pr-4 text-gray-900 placeholder-gray-400 transition-all duration-200 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 hover:border-gray-400 @error('nama_kendaraan') border-red-500 @enderror"
                                 placeholder="Contoh: Avanza, Civic, NMAX">
                         </div>
@@ -89,10 +91,10 @@
                             </div>
                             <select name="id_kategori" id="id_kategori" required
                                 class="block w-full py-3.5 pl-12 pr-4 text-gray-900 transition-all duration-200 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 hover:border-gray-400 @error('id_kategori') border-red-500 @enderror">
-                                <option value="" selected hidden>Pilih kategori</option>
+                                <option value="" hidden>Pilih kategori</option>
                                 @foreach ($kategori as $k)
                                     <option value="{{ $k->nama_kategori }}"
-                                        {{ old('id_kategori', $kendaraan->kategori_id) == $k->id ? 'selected' : '' }}>
+                                        {{ old('id_kategori', $selectedKategori) == $k->nama_kategori ? 'selected' : '' }}>
                                         {{ $k->nama_kategori }}
                                     </option>
                                 @endforeach
@@ -117,12 +119,9 @@
                                 <i class="text-gray-400 fas fa-list"></i>
                             </div>
                             <select name="jenis" id="jenis" required
+                                data-selected-jenis="{{ old('jenis', $selectedJenis) }}"
                                 class="block w-full py-3.5 pl-12 pr-4 text-gray-900 transition-all duration-200 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 hover:border-gray-400 @error('jenis') border-red-500 @enderror">
-                                <option value="" selected hidden>Pilih jenis</option>
-                                @if (old('jenis', $kendaraan->model))
-                                    <option value="{{ old('jenis', $kendaraan->model) }}" selected>
-                                        {{ old('jenis', $kendaraan->model) }}</option>
-                                @endif
+                                <option value="" hidden>Pilih jenis</option>
                             </select>
                         </div>
                         @error('jenis')
@@ -153,8 +152,8 @@
                         <!-- Preview Foto -->
                         <div id="previewContainer" class="{{ $kendaraan->foto ? '' : 'hidden' }} mt-4">
                             <p class="mb-2 text-sm font-medium text-gray-700">Preview Foto:</p>
-                            <img id="previewFoto" src="{{ $kendaraan->foto_url ?? '' }}" alt="Preview Foto"
-                                class="object-contain w-full rounded-lg shadow-md max-h-64">
+                            <img id="previewFoto" src="{{ $kendaraan->foto ? asset('storage/' . $kendaraan->foto) : '' }}"
+                                alt="Preview Foto" class="object-contain w-full rounded-lg shadow-md max-h-64">
                         </div>
                     </div>
 
@@ -169,7 +168,7 @@
                             </div>
                             <textarea name="deskripsi" id="deskripsi" rows="4"
                                 class="block w-full py-3 pl-12 pr-4 text-gray-900 placeholder-gray-400 transition-all duration-200 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 hover:border-gray-400 @error('deskripsi') border-red-500 @enderror"
-                                placeholder="Deskripsi detail tentang kendaraan...">{{ old('deskripsi', $kendaraan->keterangan) }}</textarea>
+                                placeholder="Deskripsi detail tentang kendaraan...">{{ old('deskripsi', $kendaraan->deskripsi) }}</textarea>
                         </div>
                         @error('deskripsi')
                             <p class="flex items-center mt-2 text-sm text-red-600">
@@ -200,42 +199,42 @@
         document.addEventListener('DOMContentLoaded', function() {
             const kategoriSelect = document.getElementById('id_kategori');
             const jenisSelect = document.getElementById('jenis');
+            const selectedJenis = jenisSelect.getAttribute('data-selected-jenis');
 
-            // Load jenis berdasarkan kategori yang sudah dipilih
-            if (kategoriSelect.value) {
-                loadJenis(kategoriSelect.value);
-            }
-
-            kategoriSelect.addEventListener('change', function() {
-                loadJenis(this.value);
-            });
-
-            function loadJenis(kategori) {
-                if (!kategori) {
-                    jenisSelect.innerHTML = '<option value="">Pilih kategori dulu</option>';
+            function loadJenis(namaKategori, selectedValue = '') {
+                if (!namaKategori) {
+                    jenisSelect.innerHTML = '<option value="" hidden>Pilih kategori terlebih dahulu</option>';
                     return;
                 }
 
-                const encodedKategori = encodeURIComponent(kategori);
-
-                fetch(`/admin/kategori/${encodedKategori}/jenis`)
+                fetch(`/admin/kategori/${encodeURIComponent(namaKategori)}/jenis`)
                     .then(res => {
                         if (!res.ok) throw new Error('Network error');
                         return res.json();
                     })
                     .then(data => {
-                        const currentJenis = "{{ old('jenis', $kendaraan->model) }}";
-                        jenisSelect.innerHTML = '<option value="">Pilih jenis</option>';
+                        let options = '<option value="" hidden>Pilih jenis</option>';
                         data.forEach(j => {
-                            const selected = j === currentJenis ? 'selected' : '';
-                            jenisSelect.innerHTML += `<option value="${j}" ${selected}>${j}</option>`;
+                            const selected = j === selectedValue ? 'selected' : '';
+                            options += `<option value="${j}" ${selected}>${j}</option>`;
                         });
+                        jenisSelect.innerHTML = options;
                     })
                     .catch((error) => {
                         console.error('Error:', error);
                         jenisSelect.innerHTML = '<option value="">Error loading data</option>';
                     });
             }
+
+            // Load jenis saat pertama kali halaman terbuka (edit form)
+            if (kategoriSelect.value) {
+                loadJenis(kategoriSelect.value, selectedJenis);
+            }
+
+            // Update jenis ketika kategori berubah
+            kategoriSelect.addEventListener('change', function() {
+                loadJenis(this.value, '');
+            });
 
             // Preview foto
             const fotoInput = document.getElementById('foto');
@@ -246,8 +245,7 @@
                 fotoInput.addEventListener('change', function(e) {
                     const file = e.target.files[0];
                     if (!file) {
-                        // Jika tidak ada file baru dipilih, tetap tampilkan foto lama
-                        if (!previewFoto.src) {
+                        if (!previewFoto.src || previewFoto.src === '') {
                             previewContainer.classList.add('hidden');
                         }
                         return;

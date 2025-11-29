@@ -6,6 +6,8 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DetailController;
 use App\Http\Controllers\KendaraanController;
+use App\Http\Controllers\HargaController;
+use App\Http\Controllers\UserController;
 
 // Public Routes
 Route::get('/', function () {
@@ -62,4 +64,20 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/detail/{id}/edit', [DetailController::class, 'edit'])->name('detail.edit');
     Route::put('/detail/{id}', [DetailController::class, 'update'])->name('detail.update');
     Route::delete('/detail/{id}', [DetailController::class, 'destroy'])->name('detail.destroy');
+
+    // Management Harga
+    Route::get('/harga', [HargaController::class, 'index'])->name('harga.index');
+    Route::get('/harga/create', [HargaController::class, 'create'])->name('harga.create');
+    Route::post('/harga', [HargaController::class, 'store'])->name('harga.store');
+    Route::get('/harga/{id}/edit', [HargaController::class, 'edit'])->name('harga.edit');
+    Route::put('/harga/{id}', [HargaController::class, 'update'])->name('harga.update');
+    Route::delete('/harga/{id}', [HargaController::class, 'destroy'])->name('harga.destroy');
+    
+    // Management User
+    Route::get('/user', [UserController::class, 'index'])->name('user.index');
+    Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
+    Route::post('/user', [UserController::class, 'store'])->name('user.store');
+    Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
+    Route::put('/user/{id}', [UserController::class, 'update'])->name('user.update');
+    Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
 });

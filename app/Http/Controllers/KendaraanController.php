@@ -9,16 +9,43 @@ use Illuminate\Support\Facades\Storage;
 
 class KendaraanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data_kendaraan = Kendaraan::with('kategori')->latest()->paginate(10);
-        return view('admin.kendaraan.index', compact('data_kendaraan'));
+        $query = Kendaraan::with('kategori')->latest();
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('merek', 'like', "%{$search}%")
+                    ->orWhere('nama_kendaraan', 'like', "%{$search}%")
+                    ->orWhereHas('kategori', function ($q) use ($search) {
+                        $q->where('nama_kategori', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        if ($request->has('kategori') && $request->kategori != '') {
+            $query->whereHas('kategori', function ($q) use ($request) {
+                $q->where('nama_kategori', $request->kategori);
+            });
+        }
+
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+        $data_kendaraan = $query->paginate(12);
+
+        $kategoris = Kategori::select('nama_kategori')
+            ->distinct()
+            ->orderBy('nama_kategori')
+            ->get();
+
+        return view('admin.kendaraan.index', compact('data_kendaraan', 'kategoris'));
     }
 
-    // untuk form create
     public function create()
     {
-        // ambil kategori unik
         $kategori = Kategori::select('nama_kategori')
             ->distinct()
             ->get();
@@ -26,9 +53,17 @@ class KendaraanController extends Controller
         return view('admin.kendaraan.create', compact('kategori'));
     }
 
+    // public function getJenis($namaKategori)
+    // {
+    //     $jenis = Kategori::where('nama_kategori', $namaKategori)->pluck('jenis');
+    //     return response()->json($jenis);
+    // }
     public function getJenis($namaKategori)
     {
-        $jenis = Kategori::where('nama_kategori', $namaKategori)->pluck('jenis');
+        $jenis = Kategori::where('nama_kategori', $namaKategori)
+            ->pluck('jenis')
+            ->unique()
+            ->values(); // reset key array
         return response()->json($jenis);
     }
 
@@ -67,9 +102,14 @@ class KendaraanController extends Controller
 
     public function edit($id)
     {
-        $kendaraan = Kendaraan::findOrFail($id);
-        $kategori = Kategori::all();
-        return view('admin.kendaraan.edit', compact('kendaraan', 'kategori'));
+        $kendaraan = Kendaraan::with('kategori')->findOrFail($id);
+
+        $selectedJenis = $kendaraan->kategori->jenis ?? null;
+        $selectedKategori = $kendaraan->kategori->nama_kategori ?? null;
+
+        $kategori = Kategori::select('nama_kategori')->distinct()->get();
+
+        return view('admin.kendaraan.edit', compact('kendaraan', 'kategori', 'selectedJenis', 'selectedKategori'));
     }
 
     public function update(Request $request, $id)
@@ -77,13 +117,18 @@ class KendaraanController extends Controller
         $kendaraan = Kendaraan::findOrFail($id);
 
         $request->validate([
-            'id_kategori'     => 'required|exists:kategori,id',
+            'id_kategori'     => 'required|string',
+            'jenis'           => 'required|string',
             'merek'           => 'required|string|max:255',
             'nama_kendaraan'  => 'required|string|max:255',
             'deskripsi'       => 'nullable|string',
-            'status'          => 'required|in:Tersedia,Disewa,Perbaikan',
             'foto'            => 'nullable|image|mimes:jpg,jpeg,png|max:4096',
         ]);
+
+        // Cari kategori berdasarkan nama_kategori DAN jenis
+        $kategori = Kategori::where('nama_kategori', $request->id_kategori)
+            ->where('jenis', $request->jenis)
+            ->firstOrFail();
 
         // Foto
         $fotoPath = $kendaraan->foto;
@@ -96,11 +141,10 @@ class KendaraanController extends Controller
         }
 
         $kendaraan->update([
-            'id_kategori'    => $request->id_kategori,
+            'id_kategori'    => $kategori->id,
             'merek'          => $request->merek,
             'nama_kendaraan' => $request->nama_kendaraan,
             'deskripsi'      => $request->deskripsi,
-            'status'         => $request->status,
             'foto'           => $fotoPath,
         ]);
 
