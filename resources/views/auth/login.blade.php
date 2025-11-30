@@ -155,7 +155,7 @@
                                     &copy; 2025 Sewa Aja. Made with
                                     <i class="fas fa-heart text-red-500"></i> by
                                     <span
-                                        class="font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">𝓟</span>
+                                        class="font-bold text-lg bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">𝓟 .</span>
                                 </p>
                             </div>
                         </div>

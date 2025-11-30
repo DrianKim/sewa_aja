@@ -536,7 +536,7 @@
                         </a>
                         <a href="#"
                             class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-400 transition">
-                            <i class="fab fa-twitter"></i>
+                            <i class="fab fa-whatsapp"></i>
                         </a>
                         <a href="#"
                             class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-500 transition">
