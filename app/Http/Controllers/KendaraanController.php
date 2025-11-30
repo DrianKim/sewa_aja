@@ -11,7 +11,10 @@ class KendaraanController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Kendaraan::with('kategori')->latest();
+        // Tambah with('harga') untuk load data harga
+        $query = Kendaraan::with(['kategori', 'harga' => function ($q) {
+            $q->orderBy('tanggal_berlaku', 'desc'); // Ambil harga terbaru
+        }])->latest();
 
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
@@ -41,7 +44,29 @@ class KendaraanController extends Controller
             ->orderBy('nama_kategori')
             ->get();
 
-        return view('admin.kendaraan.index', compact('data_kendaraan', 'kategoris'));
+        // Hitung statistik - Cara lebih fleksibel
+        $totalKendaraan = Kendaraan::count();
+
+        // Cari ID kategori mobil dan motor
+        $mobilKategori = Kategori::where('nama_kategori', 'like', '%mobil%')->first();
+        $motorKategori = Kategori::where('nama_kategori', 'like', '%motor%')->first();
+
+        $totalMobil = $mobilKategori ?
+            Kendaraan::where('id_kategori', $mobilKategori->id)->count() : 0;
+
+        $totalMotor = $motorKategori ?
+            Kendaraan::where('id_kategori', $motorKategori->id)->count() : 0;
+
+        $totalTersedia = Kendaraan::where('status', 'tersedia')->count();
+
+        return view('admin.kendaraan.index', compact(
+            'data_kendaraan',
+            'kategoris',
+            'totalKendaraan',
+            'totalMobil',
+            'totalMotor',
+            'totalTersedia'
+        ));
     }
 
     public function create()

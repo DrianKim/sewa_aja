@@ -1,25 +1,128 @@
-@php
-    // Ambil semua data tanpa pagination untuk grouping
-    $allKategori = App\Models\Kategori::orderBy('nama_kategori')->orderBy('jenis')->get();
-    $kategoris = $allKategori->groupBy('nama_kategori');
-@endphp
 @extends('admin.layouts.app')
 @section('title', 'Kategori')
 
 @section('content')
     <div class="container px-6 py-1 mx-auto">
+        <!-- Header -->
+        <div class="mb-6">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800">Data Kategori</h2>
+                <p class="text-gray-600">Kelola semua kategori kendaraan rental Anda</p>
+            </div>
+        </div>
+
+        <!-- Panel Statistik -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+            <div class="bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl p-6 text-white shadow-lg">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-blue-100 text-sm">Total Kategori</p>
+                        <h3 class="text-2xl font-bold mt-1">{{ $totalKategori }}</h3>
+                    </div>
+                    <div class="bg-white/20 p-3 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-blue-100 text-sm">Jenis Mobil</p>
+                        <h3 class="text-2xl font-bold mt-1">{{ $totalMobil }}</h3>
+                    </div>
+                    <div class="bg-white/20 p-3 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-blue-400 to-blue-500 rounded-xl p-6 text-white shadow-lg">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-blue-100 text-sm">Jenis Motor</p>
+                        <h3 class="text-2xl font-bold mt-1">{{ $totalMotor }}</h3>
+                    </div>
+                    <div class="bg-white/20 p-3 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-blue-700 to-blue-800 rounded-xl p-6 text-white shadow-lg">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-blue-100 text-sm">Kategori Unik</p>
+                        <h3 class="text-2xl font-bold mt-1">{{ $uniqueCategories }}</h3>
+                    </div>
+                    <div class="bg-white/20 p-3 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="p-4 mb-6 bg-white rounded-xl shadow-lg">
+            <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between w-full">
+                <div class="flex-1">
+                    <div class="relative">
+                        <input type="text" id="searchInput" placeholder="Cari kategori atau jenis..."
+                            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="text-gray-400 fas fa-search"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 items-center">
+                    <select id="categoryFilter"
+                        class="px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                        <option value="">Semua Kategori</option>
+                        @foreach ($kategoris as $namaKategori => $items)
+                            <option value="{{ $namaKategori }}">{{ $namaKategori }}</option>
+                        @endforeach
+                    </select>
+
+                    <!-- Reset Filter Button -->
+                    <button onclick="resetFilters()"
+                        class="px-4 py-2 text-white bg-gray-400 rounded-lg hover:bg-gray-500 transition-colors duration-200">
+                        Reset
+                    </button>
+
+                    <!-- Tambah Kategori Button (Compact) -->
+                    <a href="{{ route('kategori.create') }}"
+                        class="inline-flex items-center px-4 py-2.5 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-all duration-200">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Tambah
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table Container -->
         <div class="overflow-hidden bg-white shadow-lg rounded-xl">
-            <!-- Header dengan button tambah -->
-            <div
-                class="flex items-center justify-between px-6 py-4 border-b border-blue-100 bg-gradient-to-r from-blue-600 to-blue-700">
-                <h2 class="text-2xl font-bold text-white">Data Kategori</h2>
-                <a href="{{ route('kategori.create') }}"
-                    class="inline-flex items-center px-4 py-2.5 bg-white text-blue-600 font-semibold rounded-lg shadow-md hover:bg-blue-50 hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                    </svg>
-                    Tambah Kategori
-                </a>
+            <!-- Table Header -->
+            <div class="px-6 py-4 border-b border-blue-100 bg-gradient-to-r from-blue-600 to-blue-700">
+                <h2 class="text-xl font-bold text-white">Daftar Kategori & Jenis</h2>
             </div>
 
             <!-- Table -->
@@ -29,21 +132,24 @@
                         <tr class="border-b border-gray-200 bg-gray-50">
                             <th
                                 class="w-16 px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-700 uppercase">
-                                #</th>
+                                #
+                            </th>
                             <th class="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-700 uppercase">
-                                Nama</th>
+                                Nama Kategori
+                            </th>
                             <th class="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-700 uppercase">
-                                Jenis</th>
+                                Jenis
+                            </th>
                             <th
                                 class="w-48 px-6 py-4 text-xs font-semibold tracking-wider text-center text-gray-700 uppercase">
                                 <i class="fas fa-gear"></i>
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-200">
+                    <tbody class="divide-y divide-gray-200" id="kategoriTableBody">
                         @forelse ($kategoris as $namaKategori => $items)
                             {{-- Row Judul (Nama Kategori) --}}
-                            <tr class="bg-blue-50">
+                            <tr class="kategori-group bg-blue-50" data-kategori="{{ strtolower($namaKategori) }}">
                                 <td class="px-6 py-4 font-semibold text-gray-900" colspan="4">
                                     <div class="flex items-center">
                                         <i class="mr-3 text-blue-600 fas fa-folder"></i>
@@ -54,7 +160,10 @@
 
                             {{-- List Jenis di bawahnya --}}
                             @foreach ($items as $index => $item)
-                                <tr class="transition-colors duration-150 hover:bg-gray-50">
+                                <tr class="kategori-item transition-colors duration-150 hover:bg-gray-50"
+                                    data-kategori="{{ strtolower($namaKategori) }}"
+                                    data-jenis="{{ strtolower($item->jenis) }}"
+                                    data-search="{{ strtolower($namaKategori . ' ' . $item->jenis) }}">
                                     <td class="px-6 py-4 text-sm text-gray-900">
                                         {{ $index + 1 }}
                                     </td>
@@ -118,42 +227,111 @@
                     </tbody>
                 </table>
             </div>
-
-            <!-- Pagination (jika perlu, tapi dengan grouping mungkin tidak sesuai) -->
-            {{-- @if ($data_kategori->hasPages())
-                <div class="px-6 py-4 border-t border-blue-100 bg-blue-50">
-                    <div class="flex items-center justify-between">
-                        <p class="text-sm text-blue-700">
-                            Menampilkan {{ $data_kategori->firstItem() }} - {{ $data_kategori->lastItem() }} dari
-                            {{ $data_kategori->total() }} kategori
-                        </p>
-                        <div class="flex space-x-2">
-                            @if ($data_kategori->onFirstPage())
-                                <span class="px-3 py-1 text-sm text-blue-400 bg-blue-100 rounded-lg">Sebelumnya</span>
-                            @else
-                                <a href="{{ $data_kategori->previousPageUrl() }}"
-                                    class="px-3 py-1 text-sm text-blue-700 transition-colors duration-200 bg-white rounded-lg shadow-sm hover:bg-blue-50">Sebelumnya</a>
-                            @endif
-
-                            @if ($data_kategori->hasMorePages())
-                                <a href="{{ $data_kategori->nextPageUrl() }}"
-                                    class="px-3 py-1 text-sm text-blue-700 transition-colors duration-200 bg-white rounded-lg shadow-sm hover:bg-blue-50">Selanjutnya</a>
-                            @else
-                                <span class="px-3 py-1 text-sm text-blue-400 bg-blue-100 rounded-lg">Selanjutnya</span>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            @endif --}}
         </div>
     </div>
 
     {{-- SweetAlert Delete Script --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const categoryFilter = document.getElementById('categoryFilter');
+            const kategoriGroups = document.querySelectorAll('.kategori-group');
+            const kategoriItems = document.querySelectorAll('.kategori-item');
+
+            function filterKategori() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const selectedCategory = categoryFilter.value.toLowerCase();
+
+                let hasVisibleItems = false;
+
+                kategoriGroups.forEach(group => {
+                    const kategoriName = group.dataset.kategori;
+                    let groupHasVisibleItems = false;
+
+                    // Cari semua item dalam group ini
+                    const itemsInGroup = document.querySelectorAll(
+                        `.kategori-item[data-kategori="${kategoriName}"]`);
+
+                    itemsInGroup.forEach(item => {
+                        const jenis = item.dataset.jenis;
+                        const searchData = item.dataset.search;
+
+                        const matchSearch = searchTerm === '' || searchData.includes(searchTerm);
+                        const matchCategory = selectedCategory === '' || kategoriName.includes(
+                            selectedCategory);
+
+                        if (matchSearch && matchCategory) {
+                            item.style.display = 'table-row';
+                            groupHasVisibleItems = true;
+                            hasVisibleItems = true;
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+
+                    // Tampilkan/sembunyikan group header
+                    if (groupHasVisibleItems) {
+                        group.style.display = 'table-row';
+                    } else {
+                        group.style.display = 'none';
+                    }
+                });
+
+                // Tampilkan pesan jika tidak ada hasil
+                const emptyState = document.querySelector('.empty-state');
+                if (!hasVisibleItems) {
+                    if (!emptyState) {
+                        showEmptyState();
+                    }
+                } else {
+                    if (emptyState) {
+                        emptyState.remove();
+                    }
+                }
+            }
+
+            function showEmptyState() {
+                const tableBody = document.getElementById('kategoriTableBody');
+                const emptyRow = document.createElement('tr');
+                emptyRow.className = 'empty-state';
+                emptyRow.innerHTML = `
+                    <td colspan="4" class="px-6 py-8 text-center">
+                        <div class="flex flex-col items-center justify-center">
+                            <i class="mb-3 text-5xl text-gray-300 fas fa-search"></i>
+                            <p class="text-sm font-medium text-gray-500">Tidak ada kategori yang ditemukan</p>
+                            <p class="mt-1 text-xs text-gray-400">
+                                Coba ubah kata kunci pencarian atau filter
+                            </p>
+                        </div>
+                    </td>
+                `;
+                tableBody.appendChild(emptyRow);
+            }
+
+            // Debounce function untuk optimasi performance
+            function debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+
+            // Event listeners untuk filtering
+            if (searchInput) {
+                searchInput.addEventListener('input', debounce(filterKategori, 300));
+            }
+
+            if (categoryFilter) {
+                categoryFilter.addEventListener('change', filterKategori);
+            }
+
             // Handle all delete buttons
             const deleteButtons = document.querySelectorAll('.delete-btn');
-
             deleteButtons.forEach(button => {
                 button.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -225,6 +403,25 @@
                 });
             @endif
         });
+
+        // Function untuk reset semua filter
+        function resetFilters() {
+            const searchInput = document.getElementById('searchInput');
+            const categoryFilter = document.getElementById('categoryFilter');
+
+            if (searchInput) searchInput.value = '';
+            if (categoryFilter) categoryFilter.value = '';
+
+            // Trigger filter update
+            if (searchInput) {
+                const event = new Event('input');
+                searchInput.dispatchEvent(event);
+            }
+            if (categoryFilter) {
+                const event = new Event('change');
+                categoryFilter.dispatchEvent(event);
+            }
+        }
     </script>
 
     <style>

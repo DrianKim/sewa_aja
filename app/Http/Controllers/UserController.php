@@ -17,8 +17,21 @@ class UserController extends Controller
 
         $totalUsers = User::where('role', 'customer')->count();
         $userAktif = User::where('role', 'customer')->count();
+        $usersToday = User::where('role', 'customer')
+            ->whereDate('created_at', today())
+            ->count();
+        $usersThisMonth = User::where('role', 'customer')
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
 
-        return view('admin.user.index', compact('users', 'totalUsers', 'userAktif'));
+        return view('admin.user.index', compact(
+            'users',
+            'totalUsers',
+            'userAktif',
+            'usersToday',
+            'usersThisMonth'
+        ));
     }
 
     public function create()

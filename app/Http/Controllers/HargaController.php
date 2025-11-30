@@ -16,11 +16,32 @@ class HargaController extends Controller
             ->orderBy('tanggal_berlaku', 'desc')
             ->get();
 
+        // Hitung statistik
+        $totalHarga = $hargas->count();
+
+        // Hitung kendaraan yang belum ada harga
+        $totalKendaraan = \App\Models\Kendaraan::count();
+        $kendaraanDenganHarga = $hargas->unique('id_kendaraan')->count();
+        $belumAdaHarga = $totalKendaraan - $kendaraanDenganHarga;
+
+        $hargaMobil = $hargas->filter(function ($harga) {
+            return $harga->kendaraan->kategori->nama_kategori == 'Mobil';
+        })->count();
+        $hargaMotor = $hargas->filter(function ($harga) {
+            return $harga->kendaraan->kategori->nama_kategori == 'Motor';
+        })->count();
+
         $groupedHargas = $hargas->groupBy(function ($harga) {
             return $harga->kendaraan->kategori->nama_kategori ?? 'Tanpa Kategori';
         });
 
-        return view('admin.harga.index', compact('groupedHargas'));
+        return view('admin.harga.index', compact(
+            'groupedHargas',
+            'totalHarga',
+            'belumAdaHarga',
+            'hargaMobil',
+            'hargaMotor'
+        ));
     }
 
     public function create()

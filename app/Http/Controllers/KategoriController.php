@@ -9,11 +9,31 @@ class KategoriController extends Controller
 {
     public function index()
     {
-        $data_kategori = Kategori::orderBy('nama_kategori')
+        $allKategori = Kategori::orderBy('nama_kategori')
             ->orderBy('jenis')
-            ->paginate(10);
+            ->get();
 
-        return view('admin.kategori.index', compact('data_kategori'));
+        // Debug: Lihat data yang didapat
+        // dd($allKategori);
+
+        // Hitung statistik yang benar
+        $totalKategori = $allKategori->count(); // Total semua record (4)
+        $uniqueCategories = $allKategori->unique('nama_kategori')->count(); // Kategori unik (2)
+
+        // Hitung jumlah jenis di setiap kategori
+        $totalMobil = $allKategori->where('nama_kategori', 'Mobil')->count(); // 3
+        $totalMotor = $allKategori->where('nama_kategori', 'Motor')->count(); // 1
+
+        // Group data untuk table
+        $kategoris = $allKategori->groupBy('nama_kategori');
+
+        return view('admin.kategori.index', compact(
+            'kategoris',
+            'totalKategori',
+            'totalMobil',
+            'totalMotor',
+            'uniqueCategories'
+        ));
     }
 
     public function create()

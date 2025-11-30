@@ -24,7 +24,7 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.pr
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Customer Routes
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'role:customer'])->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
         return view('customer/dashboard');
     })->name('customer.dashboard');
